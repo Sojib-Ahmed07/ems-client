@@ -14,37 +14,36 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   const handleCredentialsLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  e.preventDefault();
+  setError("");
+  setLoading(true);
+  try {
+    await authClient.signIn.email({
+      email,
+      password,
+      callbackURL: `${window.location.origin}/dashboard`,
+    });
+    router.push("/dashboard");
+  } catch (err: any) {
+    setError(err.message || "Invalid authentication credentials.");
+  } finally {
+    setLoading(false);
+  }
+};
 
-    try {
-      await authClient.signIn.email({
-        email,
-        password,
-        callbackURL: "/dashboard",
-      });
-      router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Invalid authentication credentials.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      setOauthLoading(true);
-      await authClient.signIn.social({
-        provider: "google",
-        callbackURL: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard` || "http://localhost:3000/dashboard",
-      });
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setOauthLoading(false);
-    }
-  };
+const handleGoogleLogin = async () => {
+  try {
+    setOauthLoading(true);
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: `${window.location.origin}/dashboard`,
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setOauthLoading(false);
+  }
+};
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4">
