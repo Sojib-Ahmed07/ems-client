@@ -22,7 +22,7 @@ export default function LoginPage() {
       await authClient.signIn.email({
         email,
         password,
-        callbackURL: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard` || "http://localhost:3000/dashboard",
+        callbackURL: "/dashboard",
       });
       router.push("/dashboard");
     } catch (err: any) {
